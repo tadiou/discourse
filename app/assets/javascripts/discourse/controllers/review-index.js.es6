@@ -1,7 +1,14 @@
 import computed from "ember-addons/ember-computed-decorators";
 
 export default Ember.Controller.extend({
-  queryParams: ["min_score", "type", "status", "category_id", "topic_id", "target_created_by_id"],
+  queryParams: [
+    "min_score",
+    "type",
+    "status",
+    "category_id",
+    "topic_id",
+    "username"
+  ],
   type: null,
   status: "pending",
   min_score: null,
@@ -9,8 +16,7 @@ export default Ember.Controller.extend({
   reviewables: null,
   topic_id: null,
   filtersExpanded: false,
-  targetCreatedById: null,
-
+  username: "",
 
   init(...args) {
     this._super(...args);
@@ -30,11 +36,16 @@ export default Ember.Controller.extend({
 
   @computed
   statuses() {
-    return ["pending", "approved", "rejected", "ignored", "reviewed", "all"].map(
-      id => {
-        return { id, name: I18n.t(`review.statuses.${id}.title`) };
-      }
-    );
+    return [
+      "pending",
+      "approved",
+      "rejected",
+      "ignored",
+      "reviewed",
+      "all"
+    ].map(id => {
+      return { id, name: I18n.t(`review.statuses.${id}.title`) };
+    });
   },
 
   @computed("filtersExpanded")
@@ -65,7 +76,7 @@ export default Ember.Controller.extend({
         min_score: this.get("filterScore"),
         status: this.get("filterStatus"),
         category_id: this.get("filterCategoryId"),
-        targetCreatedById: this.get("targetCreatedById")
+        username: this.get("filterUsername")
       });
       this.send("refreshRoute");
     },

@@ -110,25 +110,20 @@ RSpec.describe Reviewable, type: :model do
       context 'Reviewing as an admin' do
         before { user.update_columns(moderator: false, admin: true) }
 
-        it 'Let us filter by the target_created_by_id attribute' do
-          different_user_reviewable = Fabricate(:reviewable)
-
-          reviewables = Reviewable.list_for(
-            user, target_created_by_id: different_user_reviewable.target_created_by_id
-          )
-
-          expect(reviewables).to match_array [different_user_reviewable]
+        it 'can filter by the target_created_by_id attribute' do
+          different_reviewable = Fabricate(:reviewable)
+          reviewables = Reviewable.list_for(user, username: different_reviewable.target_created_by.username)
+          expect(reviewables).to include(different_reviewable)
+          reviewables = Reviewable.list_for(user, username: user.username)
+          expect(reviewables).not_to include(different_reviewable)
         end
 
-        it 'Excludes reviewable that do not match with the created_by_id' do
-          unknown_target_created_by_id = -99
-          filtered_reviewable = reviewable
-
-          reviewables = Reviewable.list_for(
-            user, target_created_by_id: unknown_target_created_by_id
-          )
-
-          expect(reviewables).not_to include filtered_reviewable
+        it 'can filter by the created_by_id attribute if there is no target' do
+          qp = Fabricate(:reviewable_queued_post)
+          reviewables = Reviewable.list_for(user, username: qp.created_by.username)
+          expect(reviewables).to include(qp)
+          reviewables = Reviewable.list_for(user, username: user.username)
+          expect(reviewables).not_to include(qp)
         end
 
         it 'Does not filter by status when status parameter is set to all' do

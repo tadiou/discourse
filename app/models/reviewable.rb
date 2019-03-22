@@ -269,11 +269,16 @@ class Reviewable < ActiveRecord::Base
     limit: nil,
     offset: nil,
     min_score: nil,
-    target_created_by_id: nil
+    username: nil
   )
     min_score ||= SiteSetting.min_score_default_visibility
 
     order = (status == :pending) ? 'score DESC, created_at DESC' : 'created_at DESC'
+
+    if username.present?
+      user_id = User.find_by_username(username)&.id
+      return [] if user_id.blank?
+    end
 
     return [] if user.blank?
     result = viewable_by(user, order: order)
@@ -283,7 +288,15 @@ class Reviewable < ActiveRecord::Base
     result = result.where(category_id: category_id) if category_id
     result = result.where(topic_id: topic_id) if topic_id
     result = result.where("score >= ?", min_score) if min_score
-    result = result.where(target_created_by_id: target_created_by_id) if target_created_by_id
+
+    # If a reviewable doesn't have a target, allow us to filter on who created that reviewable.
+    if user_id
+      result = result.where(
+        "(target_created_by_id IS NULL AND created_by_id = :user_id) OR (target_created_by_id = :user_id)",
+        user_id: user_id
+      )
+    end
+
     result = result.limit(limit) if limit
     result = result.offset(offset) if offset
     result

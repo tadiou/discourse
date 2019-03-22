@@ -369,6 +369,7 @@ en:
       title: "Needs Review"
       topic: "Topic:"
       filtered_topic: "You have filtered to reviewable content in a single topic."
+      filtered_user: "User:"
       show_all_topics: "show all topics"
       topics:
         topic: "Topic"

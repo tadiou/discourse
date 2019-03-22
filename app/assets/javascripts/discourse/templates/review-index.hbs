@@ -44,6 +44,16 @@
           {{category-chooser none="category.all" value=filterCategoryId}}
         </div>
 
+        <div class='reviewable-filter topic-filter'>
+          {{i18n "review.filtered_user"}}
+          {{user-selector
+            excludeCurrentUser=false
+            usernames=filterUsername
+            class="user-selector"
+            single="true"
+            canReceiveUpdates="true"}}
+        </div>
+
         {{#if filterTopic}}
           <div class='reviewable-filter topic-filter'>
             {{i18n "review.filtered_topic"}}
