@@ -46,8 +46,7 @@ export default createWidget("hamburger-menu", {
   },
 
   adminLinks() {
-    const { currentUser, siteSettings } = this;
-    let flagsPath = siteSettings.flags_default_topics ? "topics" : "active";
+    const { currentUser } = this;
 
     const links = [
       {

@@ -66,12 +66,11 @@
 }
 
 .reviewable-filters {
-  .topic-filter {
-    margin-top: 1em;
-    .btn {
-      margin-left: 0.5em;
-    }
+  .topic-filter .btn {
+    display: flex;
+    width: auto;
   }
+
   .refresh {
     height: 1em;
     display: flex;
