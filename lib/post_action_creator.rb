@@ -11,7 +11,7 @@ class PostActionCreator
       new(created_by, post, PostActionType.types[action_key], message: message, created_at: created_at).perform
     end
 
-    [:like, :off_topic, :spam, :inappropriate].each do |action|
+    [:like, :off_topic, :spam, :inappropriate, :bookmark].each do |action|
       define_method(action) do |created_by, post|
         create(created_by, post, action)
       end

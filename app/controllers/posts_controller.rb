@@ -488,7 +488,8 @@ class PostsController < ApplicationController
       post = Post.with_deleted.find_by(id: post_action&.post_id)
       raise Discourse::NotFound unless post
 
-      PostActionDestroyer.destroy(current_user, post, :bookmark)
+      result = PostActionDestroyer.destroy(current_user, post, :bookmark)
+      return render_json_error(result) if result.failed?
     end
 
     topic_user = TopicUser.get(post.topic, current_user)

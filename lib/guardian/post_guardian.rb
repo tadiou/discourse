@@ -192,9 +192,12 @@ module PostGuardian
   end
 
   def can_delete_post_action?(post_action)
-    is_my_own?(post_action) &&
-      !post_action.is_private_message? &&
-      post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago
+    return false unless is_my_own?(post_action) && !post_action.is_private_message?
+
+    # Bookmarks do not have a time constraint
+    return true if post_action.is_bookmark?
+
+    post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago
   end
 
   def can_see_post?(post)

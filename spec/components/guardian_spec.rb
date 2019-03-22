@@ -1698,6 +1698,21 @@ describe Guardian do
 
   end
 
+  context "can_delete_post_action?" do
+    let(:post) { Fabricate(:post) }
+
+    it "allows us to remove a bookmark" do
+      pa = PostActionCreator.bookmark(user, post).post_action
+      expect(Guardian.new(user).can_delete_post_action?(pa)).to eq(true)
+    end
+
+    it "allows us to remove a very old bookmark" do
+      pa = PostActionCreator.bookmark(user, post).post_action
+      pa.update(created_at: 2.years.ago)
+      expect(Guardian.new(user).can_delete_post_action?(pa)).to eq(true)
+    end
+  end
+
   context 'can_delete?' do
 
     it 'returns false with a nil object' do
