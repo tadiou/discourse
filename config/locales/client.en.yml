@@ -359,6 +359,7 @@ en:
         placeholder: "type the message title here"
 
     review:
+      moderation_history: "Moderation History"
       view_all: "view all"
       grouped_by_topic: "grouped by topic"
       none: "There is nothing to review right now."
